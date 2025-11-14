@@ -877,12 +877,12 @@
             // Starting and Epiphany cards (the initial 8 cards)
             if (card.type === 'starting' || card.type === 'epiphany') {
                 cost = 0; // Base cost is 0 for initial cards
-                // Original cards (the initial 8) don't cost anything for normal epiphanies
-                if (card.originalCard) {
+                // Original cards OR replicas of original cards have free epiphanies
+                if (card.originalCard || card.freeEpiphanies) {
                     // Normal epiphanies are free for original cards
                     if (card.hasDivine) cost += 20;  // Divine still costs +20
                 } else {
-                    // Non-original cards cost normally
+                    // Non-original cards without free epiphanies cost normally
                     if (card.hasEpiphany) cost += 10;
                     if (card.hasDivine) cost += 20;
                 }
@@ -1083,7 +1083,7 @@
 
                     case 'replicate':
                         const replicationBaseCost = getReplicationCost(replicationsCount);
-                        const replicationCost = replicationBaseCost + (newCards[cardIndex].hasDivine ? 20 : 0);
+                        const replicationCost = replicationBaseCost;
                         const newCard = {
                             id: Date.now(),
                             type: newCards[cardIndex].type,
@@ -1091,7 +1091,9 @@
                             hasEpiphany: newCards[cardIndex].hasEpiphany,
                             hasDivine: newCards[cardIndex].hasDivine,
                             canHaveEpiphany: newCards[cardIndex].canHaveEpiphany,
-                            originalCard: false
+                            originalCard: false,
+                            // If duplicating an original card, epiphanies should remain free
+                            freeEpiphanies: newCards[cardIndex].originalCard
                         };
                         newCards.push(newCard);
                         setActionCosts([...actionCosts, replicationCost]);
