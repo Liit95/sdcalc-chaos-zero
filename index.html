@@ -921,6 +921,7 @@
             const [isOpen, setIsOpen] = useState(false);
             const [search, setSearch] = useState('');
             const dropdownRef = useRef(null);
+            const searchInputRef = useRef(null);
 
             useEffect(() => {
                 function handleClickOutside(event) {
@@ -931,6 +932,13 @@
                 document.addEventListener('mousedown', handleClickOutside);
                 return () => document.removeEventListener('mousedown', handleClickOutside);
             }, []);
+
+            // Auto-focus search input when dropdown opens
+            useEffect(() => {
+                if (isOpen && searchInputRef.current) {
+                    searchInputRef.current.focus();
+                }
+            }, [isOpen]);
 
             const filteredCharacters = CHARACTERS.filter(char =>
                 char.name.toLowerCase().includes(search.toLowerCase())
@@ -948,6 +956,7 @@
                         <div className="character-dropdown">
                             <div className="character-search">
                                 <input
+                                    ref={searchInputRef}
                                     type="text"
                                     placeholder="Search character..."
                                     value={search}
