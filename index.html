@@ -82,6 +82,7 @@
             position: absolute;
             top: 15px;
             right: 15px;
+            z-index: 10;
         }
 
         .kofi-button {
@@ -876,8 +877,15 @@
             // Starting and Epiphany cards (the initial 8 cards)
             if (card.type === 'starting' || card.type === 'epiphany') {
                 cost = 0; // Base cost is 0 for initial cards
-                if (card.hasEpiphany) cost += 10;
-                if (card.hasDivine) cost += 20;
+                // Original cards (the initial 8) don't cost anything for normal epiphanies
+                if (card.originalCard) {
+                    // Normal epiphanies are free for original cards
+                    if (card.hasDivine) cost += 20;  // Divine still costs +20
+                } else {
+                    // Non-original cards cost normally
+                    if (card.hasEpiphany) cost += 10;
+                    if (card.hasDivine) cost += 20;
+                }
             }
 
             // Neutral cards
