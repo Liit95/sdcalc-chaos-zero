@@ -890,7 +890,7 @@
 
             // Neutral cards
             if (card.type === 'neutral') {
-                // First conversion doesn't add the 20 base cost
+                // Converted cards cost 20 base (isFirstConversion is always false)
                 if (card.isFirstConversion) {
                     cost = 0;
                 } else {
@@ -1110,7 +1110,7 @@
                         break;
 
                     case 'conversion':
-                        // All conversions cost 10 total (doesn't add 20 from neutral card base)
+                        // Conversion costs 10 + the neutral card cost (20) = 30 total
                         const conversionCost = 10;
 
                         newCards[cardIndex] = {
@@ -1121,7 +1121,7 @@
                             originalCard: false,
                             hasEpiphany: false,
                             hasDivine: false,
-                            isFirstConversion: true  // Always true so conversion always costs 10
+                            isFirstConversion: false  // False so the neutral card costs 20 points
                         };
 
                         setActionCosts([...actionCosts, conversionCost]);
